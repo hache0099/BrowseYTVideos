@@ -1,5 +1,6 @@
 # Other
 *.txt
+output_test.json
 
 # Geany Project
 *.geany
