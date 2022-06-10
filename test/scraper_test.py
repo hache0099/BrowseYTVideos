@@ -1,4 +1,4 @@
-from scraper import YTScraper, MySearchResult
+from src.scraper import YTScraper, MySearchResult
 
 def main():
     sc = YTScraper()
