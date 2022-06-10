@@ -44,6 +44,7 @@ def _from_dict(cls, search_result):
 	
 
 # Esta sección es sólo para pruebas del módulo
+"""
 def main():
 	sc = YTScraper()
 #	print(sc("doki doki waku waku"))
@@ -55,3 +56,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+"""
