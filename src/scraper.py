@@ -32,15 +32,15 @@ class YTScraper:
         results = self._get_result(request)
         return results
 
-def _from_dict(cls, search_result):
+def _from_dict(search_result):
 #	print(f"{search_result=}")
-	cls_vars = {f.name for f in fields(cls)}
+	cls_vars = {f.name for f in fields(MySearchResult)}
 	filtered_vars = {k : v for k, v in search_result.items() if k in cls_vars}
 	print(f"{filtered_vars=}")
-	tmp = filtered_vars["lengthSeconds"]
-	filtered_vars["lengthSeconds"] = int(tmp)
+#	tmp = filtered_vars["lengthSeconds"]
+#	filtered_vars["lengthSeconds"] = int(tmp)
 	
-	return cls(**filtered_vars)
+	return MySearchResult(**filtered_vars)
 	
 
 # Esta sección es sólo para pruebas del módulo
