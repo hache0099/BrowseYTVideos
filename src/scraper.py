@@ -5,7 +5,7 @@ from SafeRequest.SafeRequest import safe_request
 class MySearchResult:
 	videoId: str
 	title: str
-	lengthSeconds: int
+	lenVid: int
 	author: str
 
 
@@ -30,13 +30,23 @@ class YTScraper:
 
     def __call__(self, request):
         results = self._get_result(request)
-        return results
+        results_cls = [_from_dict(d) for d in results]
+        return results_cls
+
+
+def change_key(d : dict, old_key: str, new_key: str) -> None:
+#	print(d)
+	d[new_key] = d.pop(old_key)
+
+
 
 def _from_dict(search_result):
 #	print(f"{search_result=}")
+	change_key(search_result, "lengthSeconds", "lenVid")
 	cls_vars = {f.name for f in fields(MySearchResult)}
 	filtered_vars = {k : v for k, v in search_result.items() if k in cls_vars}
-	print(f"{filtered_vars=}")
+	
+#	print(f"{filtered_vars=}")
 #	tmp = filtered_vars["lengthSeconds"]
 #	filtered_vars["lengthSeconds"] = int(tmp)
 	
