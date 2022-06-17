@@ -6,6 +6,10 @@ class YTWin(Gtk.Window):
 	def __init__(self, win_title: str):
 		super().__init__(win_title)
 		
+		
+		self.show_all()
+		self.connect("destroy", Gtk.main_quit)
+		
 
 # ~ def main():
     # ~ pass
