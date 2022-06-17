@@ -9,11 +9,4 @@ class YTWin(Gtk.Window):
 		
 		self.show_all()
 		self.connect("destroy", Gtk.main_quit)
-		
 
-# ~ def main():
-    # ~ pass
-
-
-# ~ if __name__ == "__main__":
-    # ~ main()
