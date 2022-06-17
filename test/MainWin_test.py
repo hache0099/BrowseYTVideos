@@ -7,7 +7,7 @@ from gi.repository import Gtk
 from MainWin import YTWin
 
 def test_main():
-    win = YTWin("prueba")
+    win = YTWin("prueba",500,500)
     
     Gtk.main()
 
