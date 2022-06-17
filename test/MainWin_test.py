@@ -6,11 +6,11 @@ from gi.repository import Gtk
 
 from MainWin import YTWin
 
-def main():
+def test_main():
     win = YTWin("prueba")
     
     Gtk.main()
 
 
-if __name__ == "__main__":
-    main()
+# ~ if __name__ == "__main__":
+    # ~ main()
