@@ -1,10 +1,10 @@
 import gi
 gi.require_version("Gtk","3.0")
-from gi.repository import Gtk, Gio, Glib
+from gi.repository import Gtk, Gio, GLib
 
 class YTWin(Gtk.Window):
 	def __init__(self, win_title: str):
-		super().__init__(win_title)
+		super().__init__(title=win_title)
 		
 		
 		self.show_all()
