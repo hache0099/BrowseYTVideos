@@ -4,7 +4,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gio, GLib, Gdk
 
 
-from scraper import YTSearch
+from scraper import YTScraper
 
 
 class YTWin(Gtk.Window):
@@ -44,21 +44,22 @@ class YTWin(Gtk.Window):
 	
 	
 	def on_search_button_pressed(self, button):
-		toggle_buttons(button)
-		start_search()
+		self.toggle_buttons(button)
+		self.start_search()
 	
 	
 	def start_search(self, *args):
 		print("start_search=", args)
 	
 	
-	def on_cancel_clicked(self):
-		pass
+	def on_cancel_clicked(self, button):
+		self.toggle_buttons(button)
 	
 	
 	def toggle_buttons(self, button):
-		pass
-	
+		for n_button in self.button_list:
+			n_button.set_sensitive(not n_button.get_sensitive())
+		
 	
 	def on_search_entry_event(self, w, event):
 		if Gdk.keyval_name(event.keyval).lower() == "return":
