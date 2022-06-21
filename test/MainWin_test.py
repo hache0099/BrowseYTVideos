@@ -1,5 +1,5 @@
 import sys
-sys.path.append("../src/gui")
+sys.path.append("../src")
 import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
@@ -11,3 +11,4 @@ def test_main():
     
     Gtk.main()
 
+# ~ test_main()
