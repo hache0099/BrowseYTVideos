@@ -4,6 +4,8 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gio, GLib, Gdk
 
 
+from scraper import YTSearch
+
 
 class YTWin(Gtk.Window):
 	def __init__(self, win_title: str, w, h):
@@ -42,7 +44,8 @@ class YTWin(Gtk.Window):
 	
 	
 	def on_search_button_pressed(self, button):
-		pass
+		toggle_buttons(button)
+		start_search()
 	
 	
 	def start_search(self, *args):
