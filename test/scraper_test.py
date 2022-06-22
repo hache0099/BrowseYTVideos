@@ -2,19 +2,28 @@ import sys
 
 sys.path.append("../src")
 
-from scraper import YTScraper, MySearchResult
+import pytest
+from scraper import YTScraper, MySearchResult, InvalidQueryError
 
-def main():
-	sc = YTScraper()
-	result_list = sc("doki doki waku waku")
-#	print(result_list)
-	
-	for result in result_list:
-		assert isinstance(result, MySearchResult)
-		assert isinstance(result.lenVid, int)
-		
-		print(result)
+sc = YTScraper()
 
 
-if __name__ == "__main__":
-    main()
+def test_first():
+    result_list = sc("doki doki waku waku")
+    #	print(result_list)
+
+    for result in result_list:
+        assert isinstance(result, MySearchResult)
+        assert isinstance(result.lenVid, int)
+
+        print(result)
+
+
+def test_exception():
+    with pytest.raises(InvalidQueryError):
+        for i in range(10):
+            res_list = sc(" " * i)
+
+
+# ~ if __name__ == "__main__":
+    # ~ main()
