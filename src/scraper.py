@@ -34,7 +34,7 @@ class YTScraper:
     
 
     def __call__(self, request):
-        if not check_query(request):
+        if not _check_query(request):
             raise InvalidQueryError()
         
         results = self._get_result(request)
@@ -62,7 +62,7 @@ def _replace_chr(query: str) -> str:
         "/": "%2F",
     }
     
-    for key, val in replace_dict.items():s
+    for key, val in replace_dict.items():
         new_query = new_query.replace(key,val)
     
     return new_query
