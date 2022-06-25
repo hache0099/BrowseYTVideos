@@ -25,5 +25,3 @@ def test_exception():
             res_list = sc(" " * i)
 
 
-# ~ if __name__ == "__main__":
-    # ~ main()
