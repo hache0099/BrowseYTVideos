@@ -4,7 +4,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gio, GLib, Gdk
 
 
-from scraper import YTScraper
+from scraper import YTScraper, InvalidQueryError
 
 
 class YTWin(Gtk.Window):
@@ -12,9 +12,10 @@ class YTWin(Gtk.Window):
 		super().__init__(title=win_title, default_width=w, default_height=h)
 		
 		self.cancellable = Gio.Cancellable()
+		self.Scraper = YTScraper()
 		
 		self.search_textbox = Gtk.SearchEntry()
-		self.search_textbox.connect("key_press_event", self.on_search_entry_event)
+		self.search_textbox.connect("activate", self.on_search_entry_event)
 		
 		self.search_button = Gtk.Button(label="Search")
 		self.search_button.connect("clicked", self.on_search_button_pressed)
@@ -44,23 +45,46 @@ class YTWin(Gtk.Window):
 	
 	
 	def on_search_button_pressed(self, button):
-		self.toggle_buttons(button)
-		self.start_search()
+		self.toggle_buttons(False)
+		self.start_search(self.search_textbox.get_text())
 	
 	
-	def start_search(self, *args):
-		print("start_search=", args)
+	def start_search(self, query):
+		print(f"{query=}")
+		# ~ self.toggle_buttons()
+		task = Gio.Task().new(self, self.cancellable, self.on_task_finished)
+		task.set_return_on_cancel(True)
+		# ~ print(task)
+		
+		task.run_in_thread(self._call_scraper)
+	
+	
+	def _call_scraper(self, task, source_obj, callback_data, cancellable):
+		# ~ print("_call_scraper:", args)
+		results = self.Scraper(self.search_textbox.get_text())
+		if not task.return_error_if_cancelled():
+			print(results)
+			return results
 	
 	
 	def on_cancel_clicked(self, button):
-		self.toggle_buttons(button)
+		self.toggle_buttons(True)
+		print("task cancelled")
+		self.cancellable.cancel()
 	
 	
-	def toggle_buttons(self, button):
-		for n_button in self.button_list:
-			n_button.set_sensitive(not n_button.get_sensitive())
+	def toggle_buttons(self, value: bool):
+		self.search_button.set_sensitive(value)
+		self.cancel_button.set_sensitive(not value)
 		
 	
-	def on_search_entry_event(self, w, event):
-		if Gdk.keyval_name(event.keyval).lower() == "return":
-			start_search()
+	def on_search_entry_event(self, widget):
+		self.toggle_buttons(False)
+		self.start_search(widget.get_text())
+	
+	
+	def on_task_finished(self, source_obj, task, *args):
+		print("task cancelled", task.return_error_if_cancelled())
+		# ~ print("task value:", task.propagate_pointer())
+		self.toggle_buttons(True)
+		self.cancellable.reset()
