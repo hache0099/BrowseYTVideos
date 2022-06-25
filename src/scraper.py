@@ -16,10 +16,12 @@ class InvalidQueryError(Exception):
 
 class YTScraper:
     def __init__(self,yt_link = "https://vid.puffyan.us/api/v1/search"):
+        # ~ super().__init__(self)
         self.yt_link = yt_link
     
 
     def _get_result(self, request):
+        print("calling _get_result...")
         new_req = _replace_chr(request)
 #        print(new_req)
         params ={
@@ -32,14 +34,21 @@ class YTScraper:
 
         return results
     
-
-    def __call__(self, request):
+    
+    def _make_call(self, request):
         if not _check_query(request):
             raise InvalidQueryError()
         
         results = self._get_result(request)
         results_cls = [_from_dict(d) for d in results]
         return results_cls
+    
+
+    def __call__(self, *args):
+        print("YTScraper args:", args)
+        results = self._make_call(args[0])
+        
+        return results
 
 
 def _check_query(query: str) -> bool:
