@@ -38,7 +38,7 @@ class YTWin(Gtk.Window):
 		self.show_all()
 		self.connect("destroy", Gtk.main_quit)
 		
-		self.button_list = (
+		self.button_tuple = (
 		self.search_button,
 		self.cancel_button,
 		)
