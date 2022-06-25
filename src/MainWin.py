@@ -38,10 +38,10 @@ class YTWin(Gtk.Window):
 		self.show_all()
 		self.connect("destroy", Gtk.main_quit)
 		
-		self.button_list = [
+		self.button_list = (
 		self.search_button,
 		self.cancel_button,
-		]
+		)
 	
 	
 	def on_search_button_pressed(self, button):
