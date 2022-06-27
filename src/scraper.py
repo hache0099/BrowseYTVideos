@@ -36,7 +36,7 @@ class YTScraper:
     
     
     def _make_call(self, request):
-        if not _check_query(request):
+        if not _check_query(request) or len(request) == 0: 
             raise InvalidQueryError()
         
         results = self._get_result(request)
