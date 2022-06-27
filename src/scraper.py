@@ -1,4 +1,5 @@
 import re
+from urllib import quote_plus
 from dataclasses import dataclass, fields
 from SafeRequest.SafeRequest import safe_request
 
@@ -22,7 +23,8 @@ class YTScraper:
 
     def _get_result(self, request):
         print("calling _get_result...")
-        new_req = _replace_chr(request)
+        # ~ new_req = _replace_chr(request)
+        new_req = quote_plus(request)
 #        print(new_req)
         params ={
                 "q": new_req,
