@@ -24,15 +24,15 @@ class YTWin(Gtk.Window):
 		self.cancel_button.connect("clicked", self.on_cancel_clicked)
 		self.cancel_button.set_sensitive(False)
 		
-		self.results_cells = Gtk.CellView()
+		self.results_cells = Gtk.TreeView()
 		
 		box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6,
-			      border_width=12)
+			      border_width=6)
 		
 		box.pack_start(self.search_textbox, False, True, 0)
 		box.pack_start(self.search_button, False, True, 0)
 		box.pack_start(self.cancel_button, False, True, 0)
-		box.pack_start(self.results_cells, False, True, 0)
+		box.pack_start(self.results_cells, True, True, 0)
 			
 		self.add(box)
 		self.show_all()
