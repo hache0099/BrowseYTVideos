@@ -1,5 +1,5 @@
 import re
-from urllib import quote_plus
+from urllib.parse import quote_plus
 from dataclasses import dataclass, fields
 from SafeRequest.SafeRequest import safe_request
 
