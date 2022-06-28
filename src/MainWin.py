@@ -24,7 +24,12 @@ class YTWin(Gtk.Window):
 		self.cancel_button.connect("clicked", self.on_cancel_clicked)
 		self.cancel_button.set_sensitive(False)
 		
-		self.results_cells = Gtk.TreeView()
+		self.result_list = Gtk.ListStore(str,str,int,str)
+		self.results_cells = Gtk.TreeView(model=self.result_list)
+		self.results_cells.set_headers_visible(True)
+		self.results_cells.set_headers_clickable(True)
+		
+		self.create_listview()
 		
 		box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6,
 			      border_width=6)
@@ -42,6 +47,21 @@ class YTWin(Gtk.Window):
 		self.search_button,
 		self.cancel_button,
 		)
+	
+	def create_listview(self):
+		renderer = Gtk.CellRendererText()
+		
+		column_list = [
+			Gtk.TreeViewColumn("Título", renderer),
+			Gtk.TreeViewColumn("Canal", renderer),
+			Gtk.TreeViewColumn("Duración", renderer),
+			Gtk.TreeViewColumn("Link", renderer),
+		]
+		
+		for col in column_list:
+			col.set_clickable(True)
+			col.set_resizable(True)
+			self.results_cells.append_column(col)
 	
 	
 	def on_search_button_pressed(self, button):
@@ -88,3 +108,8 @@ class YTWin(Gtk.Window):
 		# ~ print("task value:", task.propagate_pointer())
 		self.toggle_buttons(True)
 		self.cancellable.reset()
+
+	
+	def show_results(self, results):
+		pass
+		
