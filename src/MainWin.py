@@ -30,6 +30,7 @@ class YTWin(Gtk.Window):
 		self.results_cells = Gtk.TreeView(model=result_list)
 		self.results_cells.set_headers_visible(True)
 		self.results_cells.set_headers_clickable(True)
+		self.results_cells.connect("row-activated", self.on_treeview_row_activated)
 		
 		self.scrolled = Gtk.ScrolledWindow()
 		self.scrolled.add(self.results_cells)
@@ -57,7 +58,7 @@ class YTWin(Gtk.Window):
 		renderer = Gtk.CellRendererText()
 		
 		column_list = [
-			Gtk.TreeViewColumn("Título", renderer, text=1,weight=1),
+			Gtk.TreeViewColumn("Título", renderer, text=1),
 			Gtk.TreeViewColumn("Canal", renderer, text=3),
 			Gtk.TreeViewColumn("Duración", renderer, text=2),
 			Gtk.TreeViewColumn("Link", renderer, text=0),
@@ -67,7 +68,7 @@ class YTWin(Gtk.Window):
 			col.set_clickable(True)
 			col.set_resizable(True)
 			col.set_expand(True)
-			col.set_max_width(150)
+			# ~ col.set_max_width(150)
 			self.results_cells.append_column(col)
 	
 	
@@ -128,3 +129,8 @@ class YTWin(Gtk.Window):
 		
 		self.results_cells.set_model(new_model)
 		
+
+	def on_treeview_row_activated(self, treeview, path, column):
+		selection = treeview.get_selection()
+		
+		print(selection.get_selected())
