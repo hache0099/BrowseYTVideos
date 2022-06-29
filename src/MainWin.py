@@ -57,15 +57,17 @@ class YTWin(Gtk.Window):
 		renderer = Gtk.CellRendererText()
 		
 		column_list = [
-			Gtk.TreeViewColumn("Título", Gtk.CellRendererText(), text=0),
-			Gtk.TreeViewColumn("Canal", Gtk.CellRendererText(), text=0),
-			Gtk.TreeViewColumn("Duración", Gtk.CellRendererText(), text=0),
-			Gtk.TreeViewColumn("Link", Gtk.CellRendererText(), text=0),
+			Gtk.TreeViewColumn("Título", renderer, text=1,weight=1),
+			Gtk.TreeViewColumn("Canal", renderer, text=3),
+			Gtk.TreeViewColumn("Duración", renderer, text=2),
+			Gtk.TreeViewColumn("Link", renderer, text=0),
 		]
-		
+		column_list[3].set_visible(False)
 		for col in column_list:
 			col.set_clickable(True)
 			col.set_resizable(True)
+			col.set_expand(True)
+			col.set_max_width(150)
 			self.results_cells.append_column(col)
 	
 	
