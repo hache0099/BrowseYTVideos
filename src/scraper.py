@@ -42,7 +42,7 @@ class YTScraper:
             raise InvalidQueryError()
         
         results = self._get_result(request)
-        results_cls = [_from_dict(d) for d in results]
+        results_cls = tuple(_from_dict(d) for d in results)
         return results_cls
     
 
