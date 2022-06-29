@@ -5,7 +5,7 @@ from gi.repository import Gtk, Gio, GLib, Gdk
 
 
 from scraper import YTScraper, InvalidQueryError
-
+from dataclasses import astuple
 
 class YTWin(Gtk.Window):
 	def __init__(self, win_title: str, w, h):
@@ -24,10 +24,15 @@ class YTWin(Gtk.Window):
 		self.cancel_button.connect("clicked", self.on_cancel_clicked)
 		self.cancel_button.set_sensitive(False)
 		
-		self.result_list = Gtk.ListStore(str,str,int,str)
-		self.results_cells = Gtk.TreeView(model=self.result_list)
+		result_list = Gtk.ListStore(str,str,int,str)
+		self.tree_iters = []
+		
+		self.results_cells = Gtk.TreeView(model=result_list)
 		self.results_cells.set_headers_visible(True)
 		self.results_cells.set_headers_clickable(True)
+		
+		self.scrolled = Gtk.ScrolledWindow()
+		self.scrolled.add(self.results_cells)
 		
 		self.create_listview()
 		
@@ -37,7 +42,7 @@ class YTWin(Gtk.Window):
 		box.pack_start(self.search_textbox, False, True, 0)
 		box.pack_start(self.search_button, False, True, 0)
 		box.pack_start(self.cancel_button, False, True, 0)
-		box.pack_start(self.results_cells, True, True, 0)
+		box.pack_start(self.scrolled, True, True, 0)
 			
 		self.add(box)
 		self.show_all()
@@ -52,10 +57,10 @@ class YTWin(Gtk.Window):
 		renderer = Gtk.CellRendererText()
 		
 		column_list = [
-			Gtk.TreeViewColumn("Título", renderer),
-			Gtk.TreeViewColumn("Canal", renderer),
-			Gtk.TreeViewColumn("Duración", renderer),
-			Gtk.TreeViewColumn("Link", renderer),
+			Gtk.TreeViewColumn("Título", Gtk.CellRendererText(), text=0),
+			Gtk.TreeViewColumn("Canal", Gtk.CellRendererText(), text=0),
+			Gtk.TreeViewColumn("Duración", Gtk.CellRendererText(), text=0),
+			Gtk.TreeViewColumn("Link", Gtk.CellRendererText(), text=0),
 		]
 		
 		for col in column_list:
@@ -84,6 +89,7 @@ class YTWin(Gtk.Window):
 		results = self.Scraper(self.search_textbox.get_text())
 		if not task.return_error_if_cancelled():
 			print(results)
+			self.show_results(results)
 			return results
 	
 	
@@ -96,6 +102,8 @@ class YTWin(Gtk.Window):
 	def toggle_buttons(self, value: bool):
 		self.search_button.set_sensitive(value)
 		self.cancel_button.set_sensitive(not value)
+		
+		self.results_cells.set_sensitive(value)
 		
 	
 	def on_search_entry_event(self, widget):
@@ -111,5 +119,10 @@ class YTWin(Gtk.Window):
 
 	
 	def show_results(self, results):
-		pass
+		self.results_cells.set_model(None)
+		new_model = Gtk.ListStore(str,str,int,str)
+		for res in results:
+			new_model.append(list(astuple(res)))
+		
+		self.results_cells.set_model(new_model)
 		
