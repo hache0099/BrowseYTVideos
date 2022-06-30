@@ -2,7 +2,7 @@ import re
 from urllib.parse import quote_plus
 from dataclasses import dataclass, fields
 from custom_exceptions import InvalidQueryError
-from SafeRequest.SafeRequest import safe_request
+from easy_request import safe_request
 
 @dataclass
 class MySearchResult:
@@ -40,7 +40,7 @@ class YTScraper:
     
     def _make_call(self, request):
         if not _check_query(request) or len(request) == 0: 
-            raise InvalidQueryError()
+            raise InvalidQueryError("Búsqueda no válida")
         
         results = self._get_result(request)
         results_cls = tuple(_from_dict(d) for d in results)
