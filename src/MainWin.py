@@ -50,10 +50,10 @@ class YTWin(Gtk.Window):
 		self.show_all()
 		self.connect("destroy", Gtk.main_quit)
 		
-		self.button_tuple = (
-		self.search_button,
-		self.cancel_button,
-		)
+		# ~ self.button_tuple = (
+		# ~ self.search_button,
+		# ~ self.cancel_button,
+		# ~ )
 	
 	
 	def create_listview(self):
@@ -95,7 +95,7 @@ class YTWin(Gtk.Window):
 			results = self.Scraper(self.search_textbox.get_text())
 		except (InvalidQueryError, RequestError) as e:
 			#TODO: Decidir si usar un popup o un BarStatus
-			pass
+			print(e.args)
 		else:
 			if not task.return_error_if_cancelled():
 				print(results)
