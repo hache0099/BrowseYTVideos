@@ -12,6 +12,7 @@ def test_first():
     result_list = sc("doki doki waku waku")
     #	print(result_list)
 
+    assert isinstance(result_list,tuple)
     for result in result_list:
         assert isinstance(result, MySearchResult)
         assert isinstance(result.lenVid, int)
