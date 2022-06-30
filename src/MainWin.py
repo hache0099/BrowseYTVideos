@@ -57,12 +57,12 @@ class YTWin(Gtk.Window):
 	def create_listview(self):
 		renderer = Gtk.CellRendererText()
 		
-		column_list = [
+		column_list = (
 			Gtk.TreeViewColumn("Título", renderer, text=1),
 			Gtk.TreeViewColumn("Canal", renderer, text=3),
 			Gtk.TreeViewColumn("Duración", renderer, text=2),
 			Gtk.TreeViewColumn("Link", renderer, text=0),
-		]
+		)
 		column_list[3].set_visible(False)
 		for col in column_list:
 			col.set_clickable(True)
@@ -130,7 +130,9 @@ class YTWin(Gtk.Window):
 		self.results_cells.set_model(new_model)
 		
 
-	def on_treeview_row_activated(self, treeview, path, column):
-		selection = treeview.get_selection()
+	def on_treeview_row_activated(self, tree, path, column):
+		selection = tree.get_selection()
 		
-		print(selection.get_selected())
+		model, treeiter = selection.get_selected()
+		
+		print(model[treeiter][0])
