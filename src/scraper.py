@@ -1,6 +1,7 @@
 import re
 from urllib.parse import quote_plus
 from dataclasses import dataclass, fields
+from custom_exceptions import InvalidQueryError
 from SafeRequest.SafeRequest import safe_request
 
 @dataclass
@@ -11,8 +12,8 @@ class MySearchResult:
 	author: str
 
 
-class InvalidQueryError(Exception):
-    pass
+# ~ class InvalidQueryError(Exception):
+    # ~ pass
 
 
 class YTScraper:
