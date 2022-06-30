@@ -3,7 +3,8 @@ import sys
 sys.path.append("../src")
 
 import pytest
-from scraper import YTScraper, MySearchResult, InvalidQueryError
+from custom_exceptions import InvalidQueryError, RequestError
+from scraper import YTScraper, MySearchResult
 
 sc = YTScraper()
 
@@ -26,3 +27,6 @@ def test_exception():
             res_list = sc(" " * i)
 
 
+def test_no_connectivity():
+    with pytest.raises(RequestError):
+        result_list = sc("doki doki waku waku")
