@@ -3,9 +3,10 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gio, GLib, Gdk
 
-
-from scraper import YTScraper, InvalidQueryError
+from scraper import YTScraper
 from dataclasses import astuple
+from custom_exceptions import InvalidQueryError, RequestError
+
 
 class YTWin(Gtk.Window):
 	def __init__(self, win_title: str, w, h):
@@ -54,6 +55,7 @@ class YTWin(Gtk.Window):
 		self.cancel_button,
 		)
 	
+	
 	def create_listview(self):
 		renderer = Gtk.CellRendererText()
 		
@@ -89,11 +91,16 @@ class YTWin(Gtk.Window):
 	
 	def _call_scraper(self, task, source_obj, callback_data, cancellable):
 		# ~ print("_call_scraper:", args)
-		results = self.Scraper(self.search_textbox.get_text())
-		if not task.return_error_if_cancelled():
-			print(results)
-			self.show_results(results)
-			return results
+		try:
+			results = self.Scraper(self.search_textbox.get_text())
+		except (InvalidQueryError, RequestError) as e:
+			#TODO: Decidir si usar un popup o un BarStatus
+			pass
+		else:
+			if not task.return_error_if_cancelled():
+				print(results)
+				self.show_results(results)
+				return results
 	
 	
 	def on_cancel_clicked(self, button):
