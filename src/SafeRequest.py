@@ -1,8 +1,8 @@
 import requests
+from custom_exceptions import RequestError
 
-
-class RequestException(Exception):
-    pass
+# ~ class RequestException(Exception):
+    # ~ pass
 
 
 def safe_request(
@@ -18,7 +18,7 @@ def safe_request(
         requests.exceptions.HTTPError,
         requests.exceptions.ConnectionError,
     ) as e:
-        raise RequestException(*e.args)
+        raise RequestError(*e.args)
     # ~ except :
     # ~ code = resp.status_code
     # ~ print(f"Bad Request ({code=})")
