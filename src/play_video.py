@@ -1,5 +1,5 @@
 import subprocess
-
+from custom_exceptions import ProcessVideoError
 
 class YTPlayer:
     def __init__(self):
@@ -11,4 +11,11 @@ class YTPlayer:
     
     
     def play_video(self):
-        stdout = subprocess.run(["mpv", self.video_to_play], capture_output=True)
+        process = subprocess.run(["mpv", self.video_to_play], capture_output=True, text=True)
+        
+        print("return_code=", process.returncode)
+        print("stderr=", process.stderr)
+        try:
+            process.check_returncode()
+        except subprocess.CalledProcessError as e:
+            raise ProcessVideoError from e
