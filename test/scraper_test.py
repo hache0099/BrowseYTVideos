@@ -3,8 +3,8 @@ import sys
 sys.path.append("../src")
 
 import pytest
-from custom_exceptions import InvalidQueryError, RequestError
 from scraper import YTScraper, MySearchResult
+from custom_exceptions import InvalidQueryError, RequestError
 
 sc = YTScraper()
 
