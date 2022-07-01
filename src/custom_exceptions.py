@@ -4,3 +4,7 @@ class InvalidQueryError(Exception):
 
 class RequestError(Exception):
     pass
+
+
+class ProcessVideoError(Exception):
+    pass
