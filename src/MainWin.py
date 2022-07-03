@@ -5,15 +5,17 @@ from gi.repository import Gtk, Gio, GLib, Gdk
 
 from scraper import YTScraper
 from dataclasses import astuple
-from custom_exceptions import InvalidQueryError, RequestError
+from play_video import YTPlayer
+from custom_exceptions import InvalidQueryError, RequestError, ProcessVideoError
 
 
-class YTWin(Gtk.Window):
-	def __init__(self, win_title: str, w, h):
+class YTWin(Gtk.ApplicationWindow):
+	def __init__(self, win_title: str, w, h, yt_link=None):
 		super().__init__(title=win_title, default_width=w, default_height=h)
 		
 		self.cancellable = Gio.Cancellable()
-		self.Scraper = YTScraper()
+		self.Scraper = YTScraper(yt_link)
+		self.player = YTPlayer()
 		
 		self.search_textbox = Gtk.SearchEntry()
 		self.search_textbox.connect("activate", self.on_search_entry_event)
@@ -61,15 +63,15 @@ class YTWin(Gtk.Window):
 		
 		column_list = (
 			Gtk.TreeViewColumn("Título", renderer, text=1),
-			Gtk.TreeViewColumn("Canal", renderer, text=3),
 			Gtk.TreeViewColumn("Duración", renderer, text=2),
-			Gtk.TreeViewColumn("Link", renderer, text=0),
+			Gtk.TreeViewColumn("Canal", renderer, text=3),
+			# ~ Gtk.TreeViewColumn("Link", renderer, text=0),
 		)
-		column_list[3].set_visible(False)
+		# ~ column_list[3].set_visible(False)
 		for col in column_list:
 			col.set_clickable(True)
 			col.set_resizable(True)
-			col.set_expand(True)
+			# ~ col.set_expand(True)
 			# ~ col.set_max_width(150)
 			self.results_cells.append_column(col)
 	
@@ -98,7 +100,7 @@ class YTWin(Gtk.Window):
 			print(e.args)
 		else:
 			if not task.return_error_if_cancelled():
-				print(results)
+				# ~ print(results)
 				self.show_results(results)
 				return results
 	
@@ -135,6 +137,13 @@ class YTWin(Gtk.Window):
 			new_model.append(list(astuple(res)))
 		
 		self.results_cells.set_model(new_model)
+		print(f"{self.results_cells.get_allocation()=}")
+		# ~ self.results_cells.columns_autosize()
+		
+		for col in self.results_cells.get_columns():
+			print(f"{col.get_title()=},{col.get_width()=},{col.get_spacing()=}")
+			col.set_expand(True)
+			col.queue_resize()
 		
 
 	def on_treeview_row_activated(self, tree, path, column):
@@ -142,4 +151,12 @@ class YTWin(Gtk.Window):
 		
 		model, treeiter = selection.get_selected()
 		
-		print(model[treeiter][0])
+		self.player.set_video(model[treeiter][0])
+		
+		task = Gio.Task().new(self, None, self.on_task_finished)
+		task.set_name("play_video")
+		task.run_in_thread(self.play_video)
+	
+	
+	def play_video(self, task, source_obj, callback_data, cancellable):
+		self.player.play_video()
