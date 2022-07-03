@@ -50,12 +50,17 @@ class YTWin(Gtk.ApplicationWindow):
 			
 		self.add(box)
 		self.show_all()
+		self.connect("configure-event", self.configure_callback)
 		self.connect("destroy", Gtk.main_quit)
 		
 		# ~ self.button_tuple = (
 		# ~ self.search_button,
 		# ~ self.cancel_button,
 		# ~ )
+	
+	
+	def configure_callback(self, *args):
+		print("configure:", args)
 	
 	
 	def create_listview(self):
@@ -72,10 +77,10 @@ class YTWin(Gtk.ApplicationWindow):
 			col.set_clickable(True)
 			col.set_resizable(True)
 			col.set_expand(True)
-			# ~ col.set_max_width(150)
+			col.set_min_width(10)
 			self.results_cells.append_column(col)
 		
-		self.resize_columns()
+		# ~ self.resize_columns()
 	
 	
 	def on_search_button_pressed(self, button):
@@ -147,15 +152,18 @@ class YTWin(Gtk.ApplicationWindow):
 	
 	def resize_columns(self):
 		tree = self.results_cells
-		
+		width = tree.get_allocation().width
 		proportions = {
-			"título": 80,
-			"duración": 5,
-			"canal": 15,
+			"título": 70,
+			"duración": 10,
+			"canal": 20,
 		}
 		
 		for col in tree.get_columns():
 			print(f"{col.get_title()=},{col.get_width()=},{col.get_spacing()=}")
+			
+			perc : int = proportions[col.get_title().lower()]
+			col.set_fixed_width(int(width * (perc / 100)))
 	
 	
 	def on_treeview_row_activated(self, tree, path, column):
