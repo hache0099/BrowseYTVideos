@@ -11,4 +11,8 @@ def test_main():
     
     Gtk.main()
 
+def test_diff_link():
+    win = YTWin("prueba",500,500, yt_link="https://inv.riverside.rocks/api/v1/search")
+    
+    Gtk.main()
 # ~ test_main()
