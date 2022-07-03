@@ -71,9 +71,11 @@ class YTWin(Gtk.ApplicationWindow):
 		for col in column_list:
 			col.set_clickable(True)
 			col.set_resizable(True)
-			# ~ col.set_expand(True)
+			col.set_expand(True)
 			# ~ col.set_max_width(150)
 			self.results_cells.append_column(col)
+		
+		self.resize_columns()
 	
 	
 	def on_search_button_pressed(self, button):
@@ -137,15 +139,25 @@ class YTWin(Gtk.ApplicationWindow):
 			new_model.append(list(astuple(res)))
 		
 		self.results_cells.set_model(new_model)
-		print(f"{self.results_cells.get_allocation()=}")
+		print(f"{self.results_cells.get_allocation().width=}")
 		# ~ self.results_cells.columns_autosize()
 		
-		for col in self.results_cells.get_columns():
-			print(f"{col.get_title()=},{col.get_width()=},{col.get_spacing()=}")
-			col.set_expand(True)
-			col.queue_resize()
+		self.resize_columns()
 		
-
+	
+	def resize_columns(self):
+		tree = self.results_cells
+		
+		proportions = {
+			"título": 80,
+			"duración": 5,
+			"canal": 15,
+		}
+		
+		for col in tree.get_columns():
+			print(f"{col.get_title()=},{col.get_width()=},{col.get_spacing()=}")
+	
+	
 	def on_treeview_row_activated(self, tree, path, column):
 		selection = tree.get_selection()
 		
