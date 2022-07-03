@@ -18,4 +18,4 @@ class YTPlayer:
         try:
             process.check_returncode()
         except subprocess.CalledProcessError as e:
-            raise ProcessVideoError from e
+            raise ProcessVideoError(*e.args) from e
