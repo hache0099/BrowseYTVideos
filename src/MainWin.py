@@ -13,6 +13,8 @@ class YTWin(Gtk.ApplicationWindow):
 	def __init__(self, win_title: str, w, h, yt_link=None):
 		super().__init__(title=win_title, default_width=w, default_height=h)
 		
+		self.last_size_w = w
+		
 		self.cancellable = Gio.Cancellable()
 		self.Scraper = YTScraper(yt_link)
 		self.player = YTPlayer()
@@ -58,9 +60,18 @@ class YTWin(Gtk.ApplicationWindow):
 		# ~ self.cancel_button,
 		# ~ )
 	
-	
-	def configure_callback(self, *args):
-		print("configure:", args)
+	########### FIXME ###########
+	def configure_callback(self, source_obj, event, *args):
+		print("configure:", event.type)
+		new_size = event.width
+		
+		if new_size != self.last_size_w:
+			try:
+				self.resize_columns()
+			except:
+				pass
+			finally:
+				self.last_size_w = new_size
 	
 	
 	def create_listview(self):
@@ -149,7 +160,7 @@ class YTWin(Gtk.ApplicationWindow):
 		
 		self.resize_columns()
 		
-	
+	########### FIXME ###########
 	def resize_columns(self):
 		tree = self.results_cells
 		width = tree.get_allocation().width
