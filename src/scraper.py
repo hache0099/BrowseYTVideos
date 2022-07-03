@@ -17,9 +17,12 @@ class MySearchResult:
 
 
 class YTScraper:
-    def __init__(self,yt_link = "https://vid.puffyan.us/api/v1/search"):
+    def __init__(self, yt_link=None):
         # ~ super().__init__(self)
-        self.yt_link = yt_link
+        if yt_link is None:
+            self.yt_link = "https://vid.puffyan.us/api/v1/search"
+        else:
+            self.yt_link = yt_link
     
 
     def _get_result(self, request):
