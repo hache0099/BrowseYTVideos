@@ -19,6 +19,24 @@ class YTWin(Gtk.ApplicationWindow):
 		self.Scraper = YTScraper(yt_link)
 		self.player = YTPlayer()
 		
+		self.info_bar = Gtk.InfoBar()
+		self.info_bar.set_message_type(Gtk.MessageType.INFO)
+		self.info_bar.connect("response", self.on_infobar_response)
+		self.info_label = Gtk.Label()
+		self.info_label.set_text("Ahora reproduciendo: ")
+		info_content = self.info_bar.get_content_area()
+		info_content.add(self.info_label)
+		self.info_bar.set_show_close_button(True)
+		
+		self.error_bar = Gtk.InfoBar()
+		self.error_bar.set_message_type(Gtk.MessageType.ERROR)
+		self.error_bar.connect("response", self.on_infobar_response)
+		self.error_label = Gtk.Label()
+		self.error_label.set_text("Error: ")
+		err_content = self.error_bar.get_content_area()
+		err_content.add(self.error_label)
+		self.error_bar.set_show_close_button(True)
+		
 		self.search_textbox = Gtk.SearchEntry()
 		self.search_textbox.connect("activate", self.on_search_entry_event)
 		
@@ -45,6 +63,8 @@ class YTWin(Gtk.ApplicationWindow):
 		box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6,
 			      border_width=6)
 		
+		box.pack_start(self.info_bar, False, True, 0)
+		box.pack_start(self.error_bar, False, True, 0)
 		box.pack_start(self.search_textbox, False, True, 0)
 		box.pack_start(self.search_button, False, True, 0)
 		box.pack_start(self.cancel_button, False, True, 0)
@@ -55,6 +75,13 @@ class YTWin(Gtk.ApplicationWindow):
 		self.connect("configure-event", self.configure_callback)
 		self.connect("destroy", Gtk.main_quit)
 		
+		self.info_bar.hide()
+		self.error_bar.hide()
+		
+		self.info_bar_dict = {
+			"info" : (self.info_bar, self.info_label),
+			"error": (self.error_bar, self.error_label),
+		}
 		# ~ self.button_tuple = (
 		# ~ self.search_button,
 		# ~ self.cancel_button,
@@ -65,13 +92,13 @@ class YTWin(Gtk.ApplicationWindow):
 		print("configure:", event.type)
 		new_size = event.width
 		
-		if new_size != self.last_size_w:
-			try:
-				self.resize_columns()
-			except:
-				pass
-			finally:
-				self.last_size_w = new_size
+		# ~ if new_size != self.last_size_w:
+			# ~ try:
+				# ~ self.resize_columns()
+			# ~ except Exception as e:
+				# ~ print(e.args)
+			# ~ finally:
+				# ~ self.last_size_w = new_size
 	
 	
 	def create_listview(self):
@@ -116,6 +143,7 @@ class YTWin(Gtk.ApplicationWindow):
 		except (InvalidQueryError, RequestError) as e:
 			#TODO: Decidir si usar un popup o un BarStatus
 			print(e.args)
+			self.set_info_bar("error", str(e.args))
 		else:
 			if not task.return_error_if_cancelled():
 				# ~ print(results)
@@ -190,4 +218,19 @@ class YTWin(Gtk.ApplicationWindow):
 	
 	
 	def play_video(self, task, source_obj, callback_data, cancellable):
+		print(callback_data)
+		self.set_info_bar("info")
 		self.player.play_video()
+
+
+	def set_info_bar(self, bar_type : str, msg: str = ""):
+		bar, label = self.info_bar_dict[bar_type]
+		
+		label.set_text(label.get_text() + msg)
+		
+		if not bar.get_visible():
+			bar.show()
+
+
+	def on_infobar_response(self, infobar, response_id):
+		infobar.hide()
