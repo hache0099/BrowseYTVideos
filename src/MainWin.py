@@ -212,14 +212,17 @@ class YTWin(Gtk.ApplicationWindow):
 		
 		self.player.set_video(model[treeiter][0])
 		
-		task = Gio.Task().new(self, None, self.on_task_finished)
-		task.set_name("play_video")
-		task.run_in_thread(self.play_video)
+		self.set_info_bar("info", model[treeiter][1])
+		
+		self.player.play_video()
+
+		# ~ task = Gio.Task().new(self, None, self.on_task_finished)
+		# ~ task.set_name("play_video")
+		# ~ task.run_in_thread(self.play_video)
 	
 	
 	def play_video(self, task, source_obj, callback_data, cancellable):
-		print(callback_data)
-		self.set_info_bar("info")
+		# ~ print(callback_data)
 		self.player.play_video()
 
 
