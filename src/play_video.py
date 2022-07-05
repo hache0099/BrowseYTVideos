@@ -1,3 +1,4 @@
+import shutil
 import subprocess
 from custom_exceptions import ProcessVideoError
 
@@ -11,11 +12,12 @@ class YTPlayer:
     
     
     def play_video(self):
-        process = subprocess.run(["mpv", self.video_to_play], capture_output=True, text=True)
+        process = subprocess.Popen([shutil.which("mpv"), self.video_to_play], stdin=PIPE, stderr=PIPE)
         
-        print("return_code=", process.returncode)
-        print("stderr=", process.stderr)
-        try:
-            process.check_returncode()
-        except subprocess.CalledProcessError as e:
-            raise ProcessVideoError(*e.args) from e
+        return process
+        # ~ print("return_code=", process.returncode)
+        # ~ print("stderr=", process.stderr)
+        # ~ try:
+            # ~ process.check_returncode()
+        # ~ except subprocess.CalledProcessError as e:
+            # ~ raise ProcessVideoError(*e.args) from e
