@@ -12,7 +12,7 @@ class YTPlayer:
     
     
     def play_video(self):
-        process = subprocess.Popen([shutil.which("mpv"), self.video_to_play], stdin=PIPE, stderr=PIPE)
+        process = subprocess.Popen([shutil.which("mpv"), self.video_to_play])
         
         return process
         # ~ print("return_code=", process.returncode)
