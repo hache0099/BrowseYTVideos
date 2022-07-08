@@ -72,7 +72,7 @@ class YTWin(Gtk.ApplicationWindow):
 			
 		self.add(box)
 		self.show_all()
-		self.connect("configure-event", self.configure_callback)
+		# ~ self.connect("configure-event", self.configure_callback)
 		self.connect("destroy", Gtk.main_quit)
 		
 		self.info_bar.hide()
