@@ -19,20 +19,15 @@ class YTWin(Gtk.ApplicationWindow):
 		self.Scraper = YTScraper(yt_link)
 		self.player = YTPlayer()
 		
-		self.info_bar = Gtk.InfoBar()
-		self.info_bar.set_message_type(Gtk.MessageType.INFO)
-		self.info_bar.connect("response", self.on_infobar_response)
-		self.info_label = Gtk.Label()
-		self.info_label.set_text("Ahora reproduciendo: ")
-		info_content = self.info_bar.get_content_area()
-		info_content.add(self.info_label)
-		self.info_bar.set_show_close_button(True)
+		self.info_status = Gtk.Statusbar()
+		self.status_context = self.info_status.get_context_id("video status")
 		
 		self.error_bar = Gtk.InfoBar()
 		self.error_bar.set_message_type(Gtk.MessageType.ERROR)
 		self.error_bar.connect("response", self.on_infobar_response)
 		self.error_label = Gtk.Label()
 		self.error_label.set_text("Error: ")
+		self.error_label.set_max_width_chars(20)
 		err_content = self.error_bar.get_content_area()
 		err_content.add(self.error_label)
 		self.error_bar.set_show_close_button(True)
@@ -63,23 +58,23 @@ class YTWin(Gtk.ApplicationWindow):
 		box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6,
 			      border_width=6)
 		
-		box.pack_start(self.info_bar, False, True, 0)
 		box.pack_start(self.error_bar, False, True, 0)
 		box.pack_start(self.search_textbox, False, True, 0)
 		box.pack_start(self.search_button, False, True, 0)
 		box.pack_start(self.cancel_button, False, True, 0)
 		box.pack_start(self.scrolled, True, True, 0)
+		box.pack_start(self.info_status, False, True, 0)
 			
 		self.add(box)
 		self.show_all()
 		# ~ self.connect("configure-event", self.configure_callback)
 		self.connect("destroy", Gtk.main_quit)
 		
-		self.info_bar.hide()
+		# ~ self.info_bar.hide()
 		self.error_bar.hide()
 		
 		self.info_bar_dict = {
-			"info" : (self.info_bar, self.info_label),
+			# ~ "info" : (self.info_bar, self.info_label),
 			"error": (self.error_bar, self.error_label),
 		}
 		# ~ self.button_tuple = (
@@ -212,7 +207,8 @@ class YTWin(Gtk.ApplicationWindow):
 		
 		self.player.set_video(model[treeiter][0])
 		
-		self.set_info_bar("info", model[treeiter][1])
+		# ~ self.set_info_bar("info", model[treeiter][1])
+		self.show_status_bar(model[treeiter][1])
 		
 		self.player.play_video()
 
@@ -224,6 +220,10 @@ class YTWin(Gtk.ApplicationWindow):
 	def play_video(self, task, source_obj, callback_data, cancellable):
 		# ~ print(callback_data)
 		self.player.play_video()
+
+
+	def show_status_bar(self, msg: str = ""):
+		self.info_status.push(self.status_context, "Ahora reproduciendo: " + msg)
 
 
 	def set_info_bar(self, bar_type : str, msg: str = ""):
