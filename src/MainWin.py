@@ -6,6 +6,7 @@ from gi.repository import Gtk, Gio, GLib, Gdk
 from scraper import YTScraper
 from dataclasses import astuple
 from play_video import YTPlayer
+from ContextMenu import ContextMenuList
 from custom_exceptions import InvalidQueryError, RequestError, ProcessVideoError
 
 
@@ -21,6 +22,8 @@ class YTWin(Gtk.ApplicationWindow):
 		
 		self.info_status = Gtk.Statusbar()
 		self.status_context = self.info_status.get_context_id("video status")
+		
+		self.context_menu = ContextMenuList()
 		
 		self.error_bar = Gtk.InfoBar()
 		self.error_bar.set_message_type(Gtk.MessageType.ERROR)
@@ -48,6 +51,7 @@ class YTWin(Gtk.ApplicationWindow):
 		self.results_cells = Gtk.TreeView(model=result_list)
 		self.results_cells.set_headers_visible(True)
 		self.results_cells.set_headers_clickable(True)
+		self.results_cells.connect("button-press-event", self.on_treeview_button_press)
 		self.results_cells.connect("row-activated", self.on_treeview_row_activated)
 		
 		self.scrolled = Gtk.ScrolledWindow()
@@ -66,6 +70,7 @@ class YTWin(Gtk.ApplicationWindow):
 		box.pack_start(self.info_status, False, True, 0)
 			
 		self.add(box)
+		self.add(self.context_menu)
 		self.show_all()
 		# ~ self.connect("configure-event", self.configure_callback)
 		self.connect("destroy", Gtk.main_quit)
@@ -237,3 +242,12 @@ class YTWin(Gtk.ApplicationWindow):
 
 	def on_infobar_response(self, infobar, response_id):
 		infobar.hide()
+
+
+	def on_treeview_button_press(self, treeview, event):
+		if event.button == 3:
+			self.context_menu.popup_at_pointer()
+			
+			path, column, x, y = treeview.get_path_at_pos(int(event.x), int(event.y))
+			
+			tree_iter = treeview.get_model().get_iter(path)
