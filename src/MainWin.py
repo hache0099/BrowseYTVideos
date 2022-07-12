@@ -246,8 +246,10 @@ class YTWin(Gtk.ApplicationWindow):
 
 	def on_treeview_button_press(self, treeview, event):
 		if event.button == 3:
-			self.context_menu.popup_at_pointer()
-			
-			path, column, x, y = treeview.get_path_at_pos(int(event.x), int(event.y))
-			
-			tree_iter = treeview.get_model().get_iter(path)
+			try:
+				path, column, x, y = treeview.get_path_at_pos(int(event.x), int(event.y))
+			except TypeError as e:
+				pass
+			else:
+				tree_iter = treeview.get_model().get_iter(path)
+				self.context_menu.popup_at_pointer()
