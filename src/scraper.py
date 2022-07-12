@@ -88,10 +88,11 @@ def _change_key(d : dict, old_key: str, new_key: str) -> None:
     d[new_key] = d.pop(old_key)
 
 
-
 def _from_dict(search_result):
 #	print(f"{search_result=}")
     _change_key(search_result, "lengthSeconds", "lenVid")
+    search_result["lenVid"] = _secs_to_min(search_result["lenVid"])
+    
     cls_vars = {f.name for f in fields(MySearchResult)}
     filtered_vars = {k : v for k, v in search_result.items() if k in cls_vars}
 
@@ -101,3 +102,8 @@ def _from_dict(search_result):
 
     return MySearchResult(**filtered_vars)
 	
+
+def _secs_to_min(s:int) -> str:
+    mins, secs = divmod(s,60)
+    
+    return "{:02d}:{:02d}".format(mins,secs)
