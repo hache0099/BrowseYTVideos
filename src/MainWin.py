@@ -24,6 +24,7 @@ class YTWin(Gtk.ApplicationWindow):
 		self.status_context = self.info_status.get_context_id("video status")
 		
 		self.context_menu = ContextMenuList()
+		self.context_menu.connect_callback(self.on_menuitem_activate)
 		
 		self.error_bar = Gtk.InfoBar()
 		self.error_bar.set_message_type(Gtk.MessageType.ERROR)
@@ -242,6 +243,11 @@ class YTWin(Gtk.ApplicationWindow):
 
 	def on_infobar_response(self, infobar, response_id):
 		infobar.hide()
+
+
+	def on_menuitem_activate(self, menu_item):
+		label = menu_item.get_label()
+		print(label)
 
 
 	def on_treeview_button_press(self, treeview, event):
