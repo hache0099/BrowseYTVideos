@@ -16,7 +16,7 @@ def test_first():
     assert isinstance(result_list,tuple)
     for result in result_list:
         assert isinstance(result, MySearchResult)
-        assert isinstance(result.lenVid, int)
+        # ~ assert isinstance(result.lenVid, int)
 
         print(result)
 
