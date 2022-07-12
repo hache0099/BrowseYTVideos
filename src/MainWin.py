@@ -214,7 +214,7 @@ class YTWin(Gtk.ApplicationWindow):
 		self.player.set_video(model[treeiter][0])
 		
 		# ~ self.set_info_bar("info", model[treeiter][1])
-		self.show_status_bar(model[treeiter][1])
+		self.show_status_bar("Ahora reproduciendo: " + model[treeiter][1])
 		
 		self.player.play_video()
 
@@ -229,7 +229,7 @@ class YTWin(Gtk.ApplicationWindow):
 
 
 	def show_status_bar(self, msg: str = ""):
-		self.info_status.push(self.status_context, "Ahora reproduciendo: " + msg)
+		self.info_status.push(self.status_context, msg)
 
 
 	def set_info_bar(self, bar_type : str, msg: str = ""):
@@ -246,8 +246,17 @@ class YTWin(Gtk.ApplicationWindow):
 
 
 	def on_menuitem_activate(self, menu_item):
-		label = menu_item.get_label()
-		print(label)
+		label = menu_item.get_label().lower()
+		
+		if label == "reproducir":
+			self.on_treeview_row_activated(self.results_cells, None, None)
+		elif label == "descargar":
+			####### TODO #######
+			pass
+		elif label == "copiar link":
+			####### TODO #######
+			video_id = "https://youtube.com/watch?v=" + self.get_video_id()
+			print(video_id)
 
 
 	def on_treeview_button_press(self, treeview, event):
@@ -258,4 +267,13 @@ class YTWin(Gtk.ApplicationWindow):
 				pass
 			else:
 				tree_iter = treeview.get_model().get_iter(path)
+				# ~ self.context_menu.set_selected(path, column)
 				self.context_menu.popup_at_pointer()
+
+
+	def get_video_id(self) -> str:
+		selection = self.results_cells.get_selection()
+		
+		model, treeiter = selection.get_selected()
+		
+		return model[treeiter][0]
