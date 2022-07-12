@@ -42,7 +42,7 @@ class YTWin(Gtk.ApplicationWindow):
 		self.cancel_button.connect("clicked", self.on_cancel_clicked)
 		self.cancel_button.set_sensitive(False)
 		
-		result_list = Gtk.ListStore(str,str,int,str)
+		result_list = Gtk.ListStore(str,str,str,str)
 		self.tree_iters = []
 		
 		self.results_cells = Gtk.TreeView(model=result_list)
@@ -173,7 +173,7 @@ class YTWin(Gtk.ApplicationWindow):
 	
 	def show_results(self, results):
 		self.results_cells.set_model(None)
-		new_model = Gtk.ListStore(str,str,int,str)
+		new_model = Gtk.ListStore(str,str,str,str)
 		for res in results:
 			new_model.append(list(astuple(res)))
 		
