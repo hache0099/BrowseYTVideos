@@ -44,5 +44,5 @@ class ContextMenuList(Gtk.Menu):
         # ~ return item_dir
     
     
-    def get_item_dir(self) -> dict:
-        return self.item_dir
+    # ~ def get_item_dir(self) -> dict:
+        # ~ return self.item_dir
