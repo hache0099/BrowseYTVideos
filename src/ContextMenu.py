@@ -19,7 +19,7 @@ class ContextMenuList(Gtk.Menu):
         # ~ self.download_item = Gtk.MenuItem().new_with_label("Descargar")
         # ~ self.append(self.download_item)
         
-        self.item_dir = self._generate_items((
+        self._generate_items((
         "Reproducir",
         "Descargar",
         "Copiar Link",
@@ -27,16 +27,21 @@ class ContextMenuList(Gtk.Menu):
         
         self.show_all()
     
+    
+    def connect_callback(self, callback):
+        for item in self.get_children():
+            item.connect("activate", callback)
+    
 
-    def _generate_items(self, items: tuple[str]) -> dict:
-        item_dir = {}
+    def _generate_items(self, items: tuple[str]):
+        # ~ item_dir = {}
         for item_label in items:
             menuitem = Gtk.MenuItem().new_with_label(item_label)
             self.append(menuitem)
             
-            item_dir[item_label] = menuitem
+            # ~ item_dir[item_label] = menuitem
         
-        return item_dir
+        # ~ return item_dir
     
     
     def get_item_dir(self) -> dict:
