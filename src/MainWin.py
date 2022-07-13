@@ -42,6 +42,11 @@ class YTWin(Gtk.ApplicationWindow):
 		self.main_button = Gtk.Button(label="Search")
 		self.main_button.connect("clicked", self.on_main_button_pressed)
 		
+		search_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5,
+			      border_width=0)
+		search_box.pack_start(self.search_textbox, True, True, 0)
+		search_box.pack_start(self.main_button, False, True, 0)
+		
 		# ~ self.cancel_button = Gtk.Button(label="Cancel")
 		# ~ self.cancel_button.connect("clicked", self.on_cancel_clicked)
 		# ~ self.cancel_button.set_sensitive(False)
@@ -64,8 +69,9 @@ class YTWin(Gtk.ApplicationWindow):
 			      border_width=6)
 		
 		box.pack_start(self.error_bar, False, True, 0)
-		box.pack_start(self.search_textbox, False, True, 0)
-		box.pack_start(self.main_button, False, True, 0)
+		box.pack_start(search_box, False,True,0)
+		# ~ box.pack_start(self.search_textbox, False, True, 0)
+		# ~ box.pack_start(self.main_button, False, True, 0)
 		# ~ box.pack_start(self.cancel_button, False, True, 0)
 		box.pack_start(self.scrolled, True, True, 0)
 		box.pack_start(self.info_status, False, True, 0)
@@ -161,10 +167,10 @@ class YTWin(Gtk.ApplicationWindow):
 			print(e.args)
 			self.set_info_bar("error", str(e.args))
 		else:
-			print("is cancelled =", cancellable.is_cancelled())
+			# ~ print("is cancelled =", cancellable.is_cancelled())
 			if not self.cancellable.is_cancelled():
 				# ~ print(results)
-				print("Si fue cancelado esto no se debería ejecutar")
+				# ~ print("Si fue cancelado esto no se debería ejecutar")
 				self.show_results(results)
 				# ~ return results
 			self.cancellable.reset()
