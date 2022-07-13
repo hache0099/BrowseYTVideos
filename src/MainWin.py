@@ -42,9 +42,9 @@ class YTWin(Gtk.ApplicationWindow):
 		self.search_button = Gtk.Button(label="Search")
 		self.search_button.connect("clicked", self.on_search_button_pressed)
 		
-		self.cancel_button = Gtk.Button(label="Cancel")
-		self.cancel_button.connect("clicked", self.on_cancel_clicked)
-		self.cancel_button.set_sensitive(False)
+		# ~ self.cancel_button = Gtk.Button(label="Cancel")
+		# ~ self.cancel_button.connect("clicked", self.on_cancel_clicked)
+		# ~ self.cancel_button.set_sensitive(False)
 		
 		result_list = Gtk.ListStore(str,str,str,str)
 		self.tree_iters = []
@@ -122,14 +122,26 @@ class YTWin(Gtk.ApplicationWindow):
 		# ~ self.resize_columns()
 	
 	
-	def on_search_button_pressed(self, button):
-		self.toggle_buttons(False)
-		self.start_search(self.search_textbox.get_text())
+	def on_main_button_pressed(self,button):
+		label = button.get_label().lower()
+		set_sensitive = (label == "search")
+		
+		if label == "search":
+			self.start_search(self.search_textbox.get_text())
+			button.set_label("Cancel")
+		elif label == "cancel":
+			self.cancellable.cancel()
+	
+		self.toggle_treeview(set_sensitive)
+	
+	# ~ def on_search_button_pressed(self, button):
+		# ~ self.toggle_treeview(False)
+		# ~ self.start_search(self.search_textbox.get_text())
 	
 	
 	def start_search(self, query):
 		print(f"{query=}")
-		# ~ self.toggle_buttons()
+		# ~ self.toggle_treeview()
 		task = Gio.Task().new(self, self.cancellable, self.on_task_finished)
 		task.set_return_on_cancel(True)
 		# ~ print(task)
@@ -152,28 +164,28 @@ class YTWin(Gtk.ApplicationWindow):
 				return results
 	
 	
-	def on_cancel_clicked(self, button):
-		self.toggle_buttons(True)
-		print("task cancelled")
-		self.cancellable.cancel()
+	# ~ def on_cancel_clicked(self, button):
+		# ~ self.toggle_treeview(True)
+		# ~ print("task cancelled")
+		# ~ self.cancellable.cancel()
 	
 	
-	def toggle_buttons(self, value: bool):
-		self.search_button.set_sensitive(value)
-		self.cancel_button.set_sensitive(not value)
+	def toggle_treeview(self, value: bool):
+		# ~ self.search_button.set_sensitive(value)
+		# ~ self.cancel_button.set_sensitive(not value)
 		
 		self.results_cells.set_sensitive(value)
 		
 	
 	def on_search_entry_event(self, widget):
-		self.toggle_buttons(False)
+		self.toggle_treeview(False)
 		self.start_search(widget.get_text())
 	
 	
 	def on_task_finished(self, source_obj, task, *args):
 		print("task cancelled", task.return_error_if_cancelled())
 		# ~ print("task value:", task.propagate_pointer())
-		self.toggle_buttons(True)
+		self.toggle_treeview(True)
 		self.cancellable.reset()
 
 	
