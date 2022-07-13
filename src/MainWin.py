@@ -39,8 +39,8 @@ class YTWin(Gtk.ApplicationWindow):
 		self.search_textbox = Gtk.SearchEntry()
 		self.search_textbox.connect("activate", self.on_search_entry_event)
 		
-		self.search_button = Gtk.Button(label="Search")
-		self.search_button.connect("clicked", self.on_search_button_pressed)
+		self.main_button = Gtk.Button(label="Search")
+		self.main_button.connect("clicked", self.on_main_button_pressed)
 		
 		# ~ self.cancel_button = Gtk.Button(label="Cancel")
 		# ~ self.cancel_button.connect("clicked", self.on_cancel_clicked)
@@ -65,8 +65,8 @@ class YTWin(Gtk.ApplicationWindow):
 		
 		box.pack_start(self.error_bar, False, True, 0)
 		box.pack_start(self.search_textbox, False, True, 0)
-		box.pack_start(self.search_button, False, True, 0)
-		box.pack_start(self.cancel_button, False, True, 0)
+		box.pack_start(self.main_button, False, True, 0)
+		# ~ box.pack_start(self.cancel_button, False, True, 0)
 		box.pack_start(self.scrolled, True, True, 0)
 		box.pack_start(self.info_status, False, True, 0)
 			
@@ -84,7 +84,7 @@ class YTWin(Gtk.ApplicationWindow):
 			"error": (self.error_bar, self.error_label),
 		}
 		# ~ self.button_tuple = (
-		# ~ self.search_button,
+		# ~ self.main_button,
 		# ~ self.cancel_button,
 		# ~ )
 	
@@ -122,13 +122,12 @@ class YTWin(Gtk.ApplicationWindow):
 		# ~ self.resize_columns()
 	
 	
-	def on_main_button_pressed(self,button):
+	def on_main_button_pressed(self, button):
 		label = button.get_label().lower()
 		set_sensitive = (label == "search")
 		
 		if label == "search":
 			self.start_search(self.search_textbox.get_text())
-			button.set_label("Cancel")
 		elif label == "cancel":
 			self.cancellable.cancel()
 	
@@ -171,9 +170,9 @@ class YTWin(Gtk.ApplicationWindow):
 	
 	
 	def toggle_treeview(self, value: bool):
-		# ~ self.search_button.set_sensitive(value)
+		# ~ self.main_button.set_sensitive(value)
 		# ~ self.cancel_button.set_sensitive(not value)
-		
+		self.main_button.set_label("Cancel" if not value else "Search")
 		self.results_cells.set_sensitive(value)
 		
 	
