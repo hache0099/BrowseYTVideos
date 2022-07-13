@@ -19,6 +19,7 @@ class YTWin(Gtk.ApplicationWindow):
 		self.cancellable = Gio.Cancellable()
 		self.Scraper = YTScraper(yt_link)
 		self.player = YTPlayer()
+		self.clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
 		
 		self.info_status = Gtk.Statusbar()
 		self.status_context = self.info_status.get_context_id("video status")
@@ -278,8 +279,9 @@ class YTWin(Gtk.ApplicationWindow):
 			####### TODO #######
 			pass
 		elif label == "copiar link":
-			####### TODO #######
 			video_id = "https://youtube.com/watch?v=" + self.get_video_id()
+			self.clipboard.set_text(video_id,-1)
+			self.clipboard.store()
 			print(video_id)
 
 
