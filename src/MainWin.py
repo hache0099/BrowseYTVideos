@@ -124,12 +124,16 @@ class YTWin(Gtk.ApplicationWindow):
 	
 	def on_main_button_pressed(self, button):
 		label = button.get_label().lower()
-		set_sensitive = (label == "search")
+		print("main button label =", label)
+		set_sensitive : bool = None
 		
 		if label == "search":
 			self.start_search(self.search_textbox.get_text())
+			set_sensitive = False
 		elif label == "cancel":
+			print("this should be cancelled")
 			self.cancellable.cancel()
+			set_sensitive = True
 	
 		self.toggle_treeview(set_sensitive)
 	
@@ -157,10 +161,13 @@ class YTWin(Gtk.ApplicationWindow):
 			print(e.args)
 			self.set_info_bar("error", str(e.args))
 		else:
-			if not task.return_error_if_cancelled():
+			print("is cancelled =", cancellable.is_cancelled())
+			if not self.cancellable.is_cancelled():
 				# ~ print(results)
+				print("Si fue cancelado esto no se debería ejecutar")
 				self.show_results(results)
-				return results
+				# ~ return results
+			self.cancellable.reset()
 	
 	
 	# ~ def on_cancel_clicked(self, button):
@@ -172,7 +179,7 @@ class YTWin(Gtk.ApplicationWindow):
 	def toggle_treeview(self, value: bool):
 		# ~ self.main_button.set_sensitive(value)
 		# ~ self.cancel_button.set_sensitive(not value)
-		self.main_button.set_label("Cancel" if not value else "Search")
+		self.main_button.set_label("Search" if value else "Cancel")
 		self.results_cells.set_sensitive(value)
 		
 	
@@ -185,7 +192,7 @@ class YTWin(Gtk.ApplicationWindow):
 		print("task cancelled", task.return_error_if_cancelled())
 		# ~ print("task value:", task.propagate_pointer())
 		self.toggle_treeview(True)
-		self.cancellable.reset()
+		# ~ self.cancellable.reset()
 
 	
 	def show_results(self, results):
@@ -195,7 +202,7 @@ class YTWin(Gtk.ApplicationWindow):
 			new_model.append(list(astuple(res)))
 		
 		self.results_cells.set_model(new_model)
-		print(f"{self.results_cells.get_allocation().width=}")
+		# ~ print(f"{self.results_cells.get_allocation().width=}")
 		# ~ self.results_cells.columns_autosize()
 		
 		self.resize_columns()
@@ -211,7 +218,7 @@ class YTWin(Gtk.ApplicationWindow):
 		}
 		
 		for col in tree.get_columns():
-			print(f"{col.get_title()=},{col.get_width()=},{col.get_spacing()=}")
+			# ~ print(f"{col.get_title()=},{col.get_width()=},{col.get_spacing()=}")
 			
 			perc : int = proportions[col.get_title().lower()]
 			col.set_fixed_width(int(width * (perc / 100)))
