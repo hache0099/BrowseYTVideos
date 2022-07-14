@@ -75,7 +75,7 @@ class YTWin(Gtk.ApplicationWindow):
 		# ~ box.pack_start(self.main_button, False, True, 0)
 		# ~ box.pack_start(self.cancel_button, False, True, 0)
 		box.pack_start(self.scrolled, True, True, 0)
-		box.pack_start(self.info_status, False, True, 0)
+		box.pack_start(self.info_status, False, False, 0)
 			
 		self.add(box)
 		self.add(self.context_menu)
@@ -164,9 +164,8 @@ class YTWin(Gtk.ApplicationWindow):
 		try:
 			results = self.Scraper(self.search_textbox.get_text())
 		except (InvalidQueryError, RequestError) as e:
-			#TODO: Decidir si usar un popup o un BarStatus
 			print(e.args)
-			self.set_info_bar("error", str(e.args))
+			self.set_info_bar("error", e.args[0])
 		else:
 			# ~ print("is cancelled =", cancellable.is_cancelled())
 			if not self.cancellable.is_cancelled():
@@ -260,8 +259,8 @@ class YTWin(Gtk.ApplicationWindow):
 	def set_info_bar(self, bar_type : str, msg: str = ""):
 		bar, label = self.info_bar_dict[bar_type]
 		
-		label.set_text(label.get_text() + msg)
-		
+		label.set_text(msg)
+		label.set_max_width_chars(50)
 		if not bar.get_visible():
 			bar.show()
 
