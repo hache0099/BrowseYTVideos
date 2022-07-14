@@ -281,6 +281,8 @@ class YTWin(Gtk.ApplicationWindow):
 			video_id = "https://youtube.com/watch?v=" + self.get_video_id()
 			self.clipboard.set_text(video_id,-1)
 			self.clipboard.store()
+			
+			self.show_status_bar("Copiado el link al portapapeles")
 			print(video_id)
 
 
