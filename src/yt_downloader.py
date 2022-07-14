@@ -11,8 +11,14 @@ def get_video_opts(video_id: str) -> dict:
     return results
 
 
-def download_video(video_id, video_format):
-    ytdl_opts = {"format": video_format}
+def download_video(video_id, video_format, progress_hook_callbacks:list=None):
+    if progress_hooks_callbacks is None:
+        progress_hooks_callbacks = []
+        
+    ytdl_opts = {
+        "format": video_format,
+        "progress_hooks": progress_hooks_callbacks
+    }
     
     with ytdl.YoutubeDL(ytdl_opts) as ytl:
         ytl.download([video_id])
