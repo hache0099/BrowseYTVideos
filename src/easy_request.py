@@ -18,15 +18,15 @@ def safe_request(
         requests.exceptions.HTTPError,
         requests.exceptions.ConnectionError,
     ) as e:
-        msg = ""
-        if e is requests.exceptions.Timeout:
+        msg = "Error"
+        if isinstance(e, requests.exceptions.Timeout):
             msg = "Se ha agotado el tiempo de conexión"
-        elif e is requests.exceptions.HTTPError:
-            msg = "Error en el request"
-        elif e is requests.exceptions.ConnectionError:
+        elif isinstance(e, requests.exceptions.HTTPError):
+            msg = f"Error en el request (código {resp.status_code})"
+        elif isinstance(e, requests.exceptions.ConnectionError):
             msg = "Error de conexión"
         
-        raise RequestError(msg, *e.args) from e
+        raise RequestError(msg) from e
     # ~ except :
     # ~ code = resp.status_code
     # ~ print(f"Bad Request ({code=})")
