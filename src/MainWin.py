@@ -254,8 +254,13 @@ class YTWin(Gtk.ApplicationWindow):
 
 	def show_status_bar(self, msg: str = ""):
 		self.info_status.push(self.status_context, msg)
+		GLib.timeout_add_seconds(5, self.clear_status_bar)
 
-
+	
+	def clear_status_bar(self):
+		self.info_status.remove_all(self.status_context)
+	
+	
 	def set_info_bar(self, bar_type : str, msg: str = ""):
 		bar, label = self.info_bar_dict[bar_type]
 		
