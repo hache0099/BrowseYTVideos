@@ -21,7 +21,7 @@ class ContextMenuList(Gtk.Menu):
         
         self._generate_items((
         "Reproducir",
-        "Descargar",
+        # ~ "Descargar",
         "Copiar Link",
         ))
         
