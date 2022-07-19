@@ -13,12 +13,6 @@ class ContextMenuList(Gtk.Menu):
     def __init__(self):
         super().__init__()
         
-        # ~ self.play_item = Gtk.MenuItem().new_with_label("Reproducir")
-        # ~ self.append(self.play_item)
-        
-        # ~ self.download_item = Gtk.MenuItem().new_with_label("Descargar")
-        # ~ self.append(self.download_item)
-        
         self._generate_items((
         "Reproducir",
         # ~ "Descargar",
