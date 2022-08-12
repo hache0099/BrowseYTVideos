@@ -15,6 +15,7 @@ class YTWin(Gtk.ApplicationWindow):
 		super().__init__(title=win_title, default_width=w, default_height=h)
 		
 		self.last_size_w = w
+		self.search_results : tuple = None
 		
 		self.cancellable = Gio.Cancellable()
 		self.Scraper = YTScraper(yt_link)
@@ -162,18 +163,19 @@ class YTWin(Gtk.ApplicationWindow):
 	def _call_scraper(self, task, source_obj, callback_data, cancellable):
 		# ~ print("_call_scraper:", args)
 		try:
-			results = self.Scraper(self.search_textbox.get_text())
+			self.search_results = self.Scraper(self.search_textbox.get_text())
 		except (InvalidQueryError, RequestError) as e:
 			print(e.args)
 			self.set_info_bar("error", e.args[0])
-		else:
+			self.search_results = None
+		# ~ else:
 			# ~ print("is cancelled =", cancellable.is_cancelled())
-			if not self.cancellable.is_cancelled():
+			# ~ if not self.cancellable.is_cancelled():
 				# ~ print(results)
 				# ~ print("Si fue cancelado esto no se debería ejecutar")
-				self.show_results(results)
+				# ~ self.show_results(results)
 				# ~ return results
-			self.cancellable.reset()
+			# ~ self.cancellable.reset()
 	
 	
 	# ~ def on_cancel_clicked(self, button):
@@ -194,11 +196,16 @@ class YTWin(Gtk.ApplicationWindow):
 		self.start_search(widget.get_text())
 	
 	
-	def on_task_finished(self, source_obj, task, *args):
-		print("task cancelled", task.return_error_if_cancelled())
-		# ~ print("task value:", task.propagate_pointer())
+	def on_task_finished(self, source_obj, task):
 		self.toggle_treeview(True)
-		# ~ self.cancellable.reset()
+		print("task cancelled", self.cancellable.is_cancelled())
+		if not self.cancellable.is_cancelled():
+			if self.search_results != None:
+				self.show_results(self.search_results)
+			else:
+				print("Search Results at on_task_finished: lenght 0")
+		# ~ print("task value:", task.propagate_pointer())
+		self.cancellable.reset()
 
 	
 	def show_results(self, results):
@@ -242,10 +249,10 @@ class YTWin(Gtk.ApplicationWindow):
 		
 		model, treeiter = selection.get_selected()
 		
-		self.player.set_video(model[treeiter][0])
+		self.player.set_video(model[treeiter][1])
 		
 		# ~ self.set_info_bar("info", model[treeiter][1])
-		self.show_status_bar("Ahora reproduciendo: " + model[treeiter][1])
+		self.show_status_bar("Ahora reproduciendo: " + model[treeiter][0])
 		
 		self.player.play_video()
 
@@ -315,4 +322,4 @@ class YTWin(Gtk.ApplicationWindow):
 		
 		model, treeiter = selection.get_selected()
 		
-		return model[treeiter][2]
+		return model[treeiter][1]
