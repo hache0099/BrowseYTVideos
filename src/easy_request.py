@@ -38,6 +38,8 @@ def safe_request(
             return resp
 
         try:
+            print("Easy Request, returning JSON")
             return resp.json()
         except:
+            print("Easy Request, returning text")
             return resp.text
