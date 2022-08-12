@@ -25,7 +25,7 @@ class YTScraper:
             self.yt_link = yt_link
     
 
-    def _get_result(self, request):
+    def _get_result(self, request) -> dict:
         print("calling _get_result...")
         # ~ new_req = _replace_chr(request)
         # ~ new_req = quote_plus(request)
@@ -48,7 +48,7 @@ class YTScraper:
         results = self._get_result(request)
         if len(results) == 0:
             raise Exception("Results lenght at _make_call is 0")
-        results_cls = tuple(_from_dict(d) for d in results)
+        results_cls = tuple(to_tuple(d) for d in results)
         return results_cls
     
 
@@ -89,6 +89,13 @@ def _replace_chr(query: str) -> str:
 def _change_key(d : dict, old_key: str, new_key: str) -> None:
 #	print(d)
     d[new_key] = d.pop(old_key)
+
+
+def to_tuple(result) -> tuple:
+    _change_key(result, "lengthSeconds", "lenVid")
+    result["lenVid"] = _secs_to_min(result["lenVid"])
+    
+    return tuple(result.values())
 
 
 def _from_dict(search_result):
