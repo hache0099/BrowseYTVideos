@@ -202,16 +202,23 @@ class YTWin(Gtk.ApplicationWindow):
 
 	
 	def show_results(self, results):
+		if len(results) == 0:
+			raise Exception("Results len at show_results is 0")
 		self.results_cells.set_model(None)
 		new_model = Gtk.ListStore(str,str,str,str)
 		for res in results:
-			new_model.append(list(astuple(res)))
+			try:
+				print(list(astuple(res)))
+				new_model.append(list(astuple(res)))
+			except:
+				print("something bad happened")
 		
+		print("setting model")
 		self.results_cells.set_model(new_model)
 		# ~ print(f"{self.results_cells.get_allocation().width=}")
 		# ~ self.results_cells.columns_autosize()
 		
-		self.resize_columns()
+		# ~ self.resize_columns()
 		
 	########### FIXME ###########
 	def resize_columns(self):
