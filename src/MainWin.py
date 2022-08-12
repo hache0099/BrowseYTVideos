@@ -4,7 +4,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gio, GLib, Gdk
 
 from scraper import YTScraper
-from dataclasses import astuple
+# ~ from dataclasses import astuple
 from play_video import YTPlayer
 from ContextMenu import ContextMenuList
 from custom_exceptions import InvalidQueryError, RequestError, ProcessVideoError
@@ -113,9 +113,9 @@ class YTWin(Gtk.ApplicationWindow):
 		renderer = Gtk.CellRendererText()
 		
 		column_list = (
-			Gtk.TreeViewColumn("Título", renderer, text=1),
-			Gtk.TreeViewColumn("Duración", renderer, text=2),
-			Gtk.TreeViewColumn("Canal", renderer, text=3),
+			Gtk.TreeViewColumn("Título", renderer, text=0),
+			Gtk.TreeViewColumn("Duración", renderer, text=3),
+			Gtk.TreeViewColumn("Canal", renderer, text=2),
 			# ~ Gtk.TreeViewColumn("Link", renderer, text=0),
 		)
 		# ~ column_list[3].set_visible(False)
@@ -208,8 +208,8 @@ class YTWin(Gtk.ApplicationWindow):
 		new_model = Gtk.ListStore(str,str,str,str)
 		for res in results:
 			try:
-				print(list(astuple(res)))
-				new_model.append(list(astuple(res)))
+				print(res)
+				new_model.append(res)
 			except:
 				print("something bad happened")
 		
@@ -315,4 +315,4 @@ class YTWin(Gtk.ApplicationWindow):
 		
 		model, treeiter = selection.get_selected()
 		
-		return model[treeiter][0]
+		return model[treeiter][2]
