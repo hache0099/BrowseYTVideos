@@ -1,5 +1,5 @@
 import re
-from urllib.parse import quote_plus
+# ~ from urllib.parse import quote_plus
 from dataclasses import dataclass, fields
 from custom_exceptions import InvalidQueryError
 from easy_request import safe_request
@@ -28,10 +28,10 @@ class YTScraper:
     def _get_result(self, request):
         print("calling _get_result...")
         # ~ new_req = _replace_chr(request)
-        new_req = quote_plus(request)
-#        print(new_req)
+        # ~ new_req = quote_plus(request)
+        print(request)
         params ={
-                "q": new_req,
+                "q": request,
                 "type": "video",
                 "pretty": 1,
                 "fields": "videoId,title,lengthSeconds,author",
@@ -46,6 +46,8 @@ class YTScraper:
             raise InvalidQueryError("Búsqueda no válida")
         
         results = self._get_result(request)
+        if len(results) == 0:
+            raise Exception("Results lenght at _make_call is 0")
         results_cls = tuple(_from_dict(d) for d in results)
         return results_cls
     
@@ -53,7 +55,8 @@ class YTScraper:
     def __call__(self, *args):
         print("YTScraper args:", args)
         results = self._make_call(args[0])
-        
+        if len(results) == 0:
+            raise Exception("Results lenght at __call__ is 0")
         return results
 
 
